@@ -9,14 +9,14 @@
 #include <vector>
 
 class Server {
- public:
+public:
   Server();
   explicit Server(int port);
   ~Server();
 
   void connectingTheClient();
 
- private:
+private:
   int serverFd_;
   sockaddr_in addr_{};
 

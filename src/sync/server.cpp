@@ -1,6 +1,7 @@
 #include <unistd.h>
 
-#include <cstdio>
+// #include <cstdio>
+#include <cstring>
 #include <iostream>
 
 #include "../../headers/sync/sync_server.h"
@@ -67,19 +68,25 @@ void Server::connectingTheClient() {
 }
 
 void Server::handleClient(int clientFd) {
-  char buffer[512] = {0};
-  int bytes = read(clientFd, buffer, sizeof(buffer));
+  char buffer[64] = {0};
+  int count = 0;
 
-  if (bytes > 0) {
-    std::cout << "Клиент " << clientFd << ": " << buffer << std::endl;
-    std::string returnBack = "Сервер: PONG\n";
-    std::this_thread::sleep_for(std::chrono::milliseconds(3000));
+  while (count != 3) {
+    memset(buffer, 0, sizeof(buffer));
+    int bytes = read(clientFd, buffer, sizeof(buffer));
 
-    if (send(clientFd, returnBack.c_str(), sizeof(returnBack), 0) == -1) {
-      perror("fail send");
+    if (bytes > 0) {
+      std::cout << "Клиент " << clientFd << ": " << buffer << std::endl;
+      std::string returnBack = "Сервер: PONG";
+      std::this_thread::sleep_for(std::chrono::milliseconds(3000));
+
+      if (send(clientFd, returnBack.c_str(), returnBack.size(), 0) == -1) {
+        perror("fail send");
+        break;
+      }
     }
-    close(clientFd);
-
-    std::cout << "[-] Клиент " << clientFd << " ушел" << std::endl;
+    count++;
   }
+  close(clientFd);
+  std::cout << "[-] Клиент " << clientFd << " ушел" << std::endl;
 }

@@ -2,20 +2,20 @@
 #define _ASYNC_SERVER_H_
 
 #include <mutex>
-#include <thread>
-#include <vector>
 #include <netinet/in.h>
 #include <poll.h>
+#include <thread>
+#include <vector>
 
 class Server {
- public:
+public:
   Server();
-  explicit Server(const int&);
+  explicit Server(const int &);
   ~Server();
 
   void run();
 
- private:
+private:
   int serverFd_;
   sockaddr_in addr_{};
 
@@ -24,9 +24,9 @@ class Server {
 
   std::vector<pollfd> fds_;
 
-  int setNonBlocking(const int&);
+  int setNonBlocking(const int &);
   void connectingTheClient();
-  void handleClient(const int&);
+  void handleClient(const int &);
 };
 
 #endif

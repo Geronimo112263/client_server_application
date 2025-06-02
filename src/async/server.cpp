@@ -1,6 +1,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 
+#include <cstring>
 #include <iostream>
 
 #include "../../headers/async/async_server.h"
@@ -114,19 +115,35 @@ void Server::connectingTheClient() {
 }
 
 void Server::handleClient(const int &clientFd) {
-  char buffer[512] = {0};
-  int bytes = read(clientFd, buffer, sizeof(buffer));
+  int flags = fcntl(clientFd, F_GETFL, 0);
+  fcntl(clientFd, F_SETFL, flags & ~O_NONBLOCK);
 
-  if (bytes > 0) {
-    std::cout << "Клиент " << clientFd << ": " << buffer << std::endl;
-    std::string returnBack = "Сервер: PONG\n";
-    std::this_thread::sleep_for(std::chrono::milliseconds(3000));
+  char buffer[64] = {0};
+  int count = 0;
 
-    if (send(clientFd, returnBack.c_str(), sizeof(returnBack), 0) == -1) {
-      perror("fail send");
+  while (count < 3) {
+    memset(buffer, 0, sizeof(buffer));
+    int bytes = read(clientFd, buffer, sizeof(buffer));
+
+    if (bytes > 0) {
+      std::string received(buffer, bytes);
+      std::cout << "Клиент " << clientFd << ": " << received << std::endl;
+
+      if (received == "PING") {
+        std::string returnBack = "PONG";
+        std::this_thread::sleep_for(std::chrono::milliseconds(3000));
+        send(clientFd, returnBack.c_str(), returnBack.size(), 0);
+        ++count;
+      }
+    } else if (bytes == 0) {
+      std::cout << "Клиент " << clientFd << " отключился\n";
+      break;
+    } else {
+      perror("fail read");
+      break;
     }
-
-    close(clientFd);
-    std::cout << "[-] Клиент " << clientFd << " ушел" << std::endl;
   }
+
+  close(clientFd);
+  std::cout << "[-] Клиент " << clientFd << " отключен\n";
 }
