@@ -32,6 +32,18 @@ $(BUILD):
 %.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
+test_sinc_bash:
+	sh tests_script/sync.sh
+
+test_sinc_python:
+	python3 tests_script/script_sinc.py
+
+test_asinc_bash:
+	sh tests_script/async.sh
+
+test_asinc_python:
+	python3 tests_script/script_asinc.py
+
 clean:
 	rm -f $(OBJASYNC) $(OBJSYNC) $(OBJCLIENT)
 	rm -rf $(BUILD)
