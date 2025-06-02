@@ -101,11 +101,13 @@ void Server::connectingTheClient() {
 
         } else {
           int clientFd = fds_[i].fd;
+
           {
             std::lock_guard<std::mutex> lock(mutexServ_);
             threads_.emplace_back(
                 [this, clientFd]() { handleClient(clientFd); });
           }
+
           fds_.erase(fds_.begin() + i);
           --i;
         }

@@ -70,7 +70,7 @@ void Client::writeMessage() {
     int bytes = read(fd_, buffer, sizeof(buffer));
 
     if (bytes > 0) {
-      std::cout << "Сервер: " << std::string(buffer, bytes) << std::endl;
+      std::cout << std::string(buffer, bytes) << std::endl;
       count++;
     } else if (bytes == -1) {
       perror("fail read");

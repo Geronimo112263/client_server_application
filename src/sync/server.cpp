@@ -77,7 +77,7 @@ void Server::handleClient(int clientFd) {
 
     if (bytes > 0) {
       std::cout << "Клиент " << clientFd << ": " << buffer << std::endl;
-      std::string returnBack = "Сервер: PONG";
+      std::string returnBack = "PONG";
       std::this_thread::sleep_for(std::chrono::milliseconds(3000));
 
       if (send(clientFd, returnBack.c_str(), returnBack.size(), 0) == -1) {
@@ -87,6 +87,7 @@ void Server::handleClient(int clientFd) {
     }
     count++;
   }
+
   close(clientFd);
   std::cout << "[-] Клиент " << clientFd << " ушел" << std::endl;
 }
