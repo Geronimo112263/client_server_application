@@ -7,6 +7,7 @@
 #include "../../headers/sync/sync_server.h"
 
 Server::Server() {
+  counter_ = 1;
   serverFd_ = socket(AF_INET, SOCK_STREAM, 0);
 
   if (serverFd_ == -1) {
@@ -23,6 +24,7 @@ Server::Server() {
 }
 
 Server::Server(int port) {
+  counter_ = 1;
   serverFd_ = socket(AF_INET, SOCK_STREAM, 0);
 
   if (serverFd_ == -1) {
@@ -78,6 +80,9 @@ void Server::handleClient(int clientFd) {
     if (bytes > 0) {
       std::cout << "Клиент " << clientFd << ": " << buffer << std::endl;
       std::string returnBack = "PONG";
+
+      returnBack += " " + std::to_string(counter_);
+      ++counter_;
       std::this_thread::sleep_for(std::chrono::milliseconds(3000));
 
       if (send(clientFd, returnBack.c_str(), returnBack.size(), 0) == -1) {

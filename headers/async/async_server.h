@@ -17,6 +17,7 @@ public:
 
 private:
   int serverFd_;
+  int counter_;
   sockaddr_in addr_{};
 
   std::vector<std::thread> threads_;
