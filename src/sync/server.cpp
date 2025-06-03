@@ -83,7 +83,6 @@ void Server::handleClient(int clientFd) {
 
       returnBack += " " + std::to_string(counter_);
       ++counter_;
-      std::this_thread::sleep_for(std::chrono::milliseconds(3000));
 
       if (send(clientFd, returnBack.c_str(), returnBack.size(), 0) == -1) {
         perror("fail send");

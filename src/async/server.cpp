@@ -137,7 +137,6 @@ void Server::handleClient(const int &clientFd) {
         std::string returnBack = "PONG";
         returnBack += " " + std::to_string(counter_);
         ++counter_;
-        std::this_thread::sleep_for(std::chrono::milliseconds(3000));
         send(clientFd, returnBack.c_str(), returnBack.size(), 0);
         ++count;
       }

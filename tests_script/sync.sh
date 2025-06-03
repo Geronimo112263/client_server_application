@@ -6,7 +6,7 @@ SECOND_PROGRAM_REL="./../build/client"
 FIRST_PROGRAM="$(cd "$(dirname "${BASH_SOURCE[0]}")" && realpath "$FIRST_PROGRAM_REL")"
 SECOND_PROGRAM="$(cd "$(dirname "${BASH_SOURCE[0]}")" && realpath "$SECOND_PROGRAM_REL")"
 
-COUNT=5
+COUNT=20
 
 if [ ! -x "$FIRST_PROGRAM" ]; then
     echo "Не найден исполняемый файл первой программы: $FIRST_PROGRAM"
